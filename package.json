@@ -2,7 +2,7 @@
   "name": "dgz-swagger-code",
   "displayName": "dgz.swagger-code",
   "description": "通过swagger转code代码,可以根据swagger-api文档快速生成ts接口文件的插件",
-  "version": "0.0.2",
+  "version": "0.0.5",
   "icon": "logo.png",
   "publisher": "superKm",
   "engines": {
@@ -19,6 +19,7 @@
   ],
   "activationEvents": [],
   "main": "./dist/extension.js",
+  
   "contributes": {
     "configuration": {
       "title": "dgz-swagger-code",
@@ -39,8 +40,13 @@
         },
         "dgz-swagger-code.requestPath": {
           "type": "string",
-          "description": " 对应的自定义封装的request请求文件路径",
+          "description": "对应的自定义封装的request请求文件路径",
           "default": ""
+        },
+        "dgz-swagger-code.isTs": {
+          "type": "boolean",
+          "description": "是否开启生成ts代码，默认开启",
+          "default": true
         }
       }
     },

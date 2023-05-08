@@ -2,9 +2,9 @@ import { SchemaNode, Swagger } from "./fetch";
 import { Utils } from "./utils";
 import { Config } from "./config";
 /**
- * 生成Typescript代码
+ * 生成js代码
  */
-export class GenTs {
+export class GenJs {
   constructor(
     public readonly swagger: Swagger.Response,
     public readonly path: string,
@@ -166,43 +166,10 @@ export class GenTs {
        * @summary  ${summary ?? ""}
        * @desc     ${description ?? ""} 
        */
-      export const requestApi=(params?: RequestConfig): Promise<any>=> {
+      export const requestApi = params=> {
         return ${method==='post'?`request.${method}('${path}', { data:params })`:`request.${method}('${path}', { params })`}
       }`;
     codeBlocks.push(requestContent);
-
-    const queryParameters = parameters.filter((e) => e.in === "query");
-    const pathParameters = parameters.filter((e) => e.in === "path");
-    const bodyParameters = parameters.filter((e) => e.in === "body");
-    //生成请求类
-    const requestInput = `
-      export interface RequestConfig {\n    [x: string]: any;\n${
-        queryParameters.length ? `    params?: RequestQuery;\n` : ""
-      }${bodyParameters.length ? `    data?: RequestData` : ""}${
-      pathParameters.length ? `    path?: RequestPath` : ""
-    }
-      }\n`;
-    codeBlocks.push(requestInput);
-    //生成query请求参数
-    codeBlocks = codeBlocks.concat(
-      this.paramsgen("RequestQuery", queryParameters)
-    );
-    //生成path请求参数
-    codeBlocks = codeBlocks.concat(
-      this.paramsgen("RequestPath", pathParameters)
-    );
-    //生成body请求参数
-    if (bodyParameters?.length) {
-      codeBlocks = codeBlocks.concat(
-        this.recursion("RequestData", bodyParameters[0]?.schema)
-      );
-    }
-    // //生成响应
-    // if (responses?.schema) {
-    //   codeBlocks = codeBlocks.concat(
-    //     this.recursion("ResponsesBody", responses?.schema, true)
-    //   );
-    // }
 
     //     /api/x1/x2/x3/ => api_x1_x2/x3
     const $namespace = Utils.toUpperCaseHump(
